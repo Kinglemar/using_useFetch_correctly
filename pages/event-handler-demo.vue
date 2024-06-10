@@ -29,7 +29,6 @@ async function sendDataUsing$Fetch() {
       method: "POST",
       body: user.value,
     });
-    console.log(apiData);
 
     if (apiData) {
       data.value = apiData;
