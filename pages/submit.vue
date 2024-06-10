@@ -1,5 +1,17 @@
 <script setup lang="ts">
-const user = ref({
+type User = {
+  id: number;
+  email: string;
+  username: string;
+  firstName: string;
+  gender: string;
+  image: string;
+  lastName: string;
+  refreshToken: string;
+  token: string;
+};
+
+const userCredentials = ref({
   username: "emilys",
   password: "emilyspass",
 });
@@ -7,12 +19,12 @@ const user = ref({
 const {
   data,
   execute,
-  pending: loading,
+  pending,
   error,
   status,
-} = useFetch<any>("https://dummyjson.com/user/login", {
+} = useFetch<User>("https://dummyjson.com/user/login", {
   method: "POST",
-  body: user.value,
+  body: userCredentials.value,
   immediate: false,
   lazy: true,
 });
@@ -26,7 +38,7 @@ const {
     <h1 v-else class="my-3 text-5xl">Welcome, {{ data?.username }}</h1>
 
     <section v-if="data">
-      <img class="w-36 h-36" :src="data?.image ? data?.image : ''" alt="" />
+      <img class="w-36 h-36" :src="data.image ? data?.image : ''" alt="" />
       <p class="text-xl leading-relaxed flex gap-3">
         Gender: {{ data?.gender }}
       </p>
@@ -40,16 +52,16 @@ const {
 
     <section v-else class="w-fit h-full">
       <p class="text-xl leading-relaxed flex gap-3">
-        Username: {{ user?.username }}
+        Username: {{ userCredentials?.username }}
       </p>
       <p class="text-xl leading-relaxed flex gap-3">
-        Password: {{ user?.password }}
+        Password: {{ userCredentials?.password }}
       </p>
       <button
-        @click="() => execute"
+        @click="() => execute()"
         class="mt-3 px-3 py-1 bg-green-700 text-white rounded-md"
       >
-        {{ loading ? "Request access" : "Pending.." }}
+        {{ pending ? "Request access" : "Pending.." }}
       </button>
     </section>
   </main>
